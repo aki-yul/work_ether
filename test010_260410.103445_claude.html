@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>경희대학교 경영대학원 60주년 | 60 Years of Legacy</title>
+
+    <!-- External Libraries -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Pretendard:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --deep-red: #8A1538;
+            --gold: #C5A059;
+            --black: #000000;
+        }
+
+        /* ── Base & Typography ── */
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: var(--black);
+            color: #ffffff;
+            margin: 0;
+            overflow-x: hidden;
+            /* [FIX 1] 전역 word-break 적용으로 단어 중간 잘림 방지 */
+            word-break: keep-all;
+            overflow-wrap: break-word;
+        }
+        .serif { font-family: 'Noto Serif KR', serif; }
+        .text-gold { color: var(--gold); }
+        .bg-deep-red { background-color: var(--deep-red); }
+
+        /* ── Preloader ── */
+        #preloader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--deep-red); z-index: 10000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            /* visibility+opacity로 제어 — display:none은 JS에서 직접 처리 */
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.6s ease-in-out, visibility 0.6s ease-in-out;
+        }
+        .loader-emblem {
+            width: 70px; height: 70px;
+            border: 2px solid var(--gold); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem; font-weight: bold; color: #fff;
+            animation: pulse 2s infinite ease-in-out;
+            margin-bottom: 1.5rem;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50%       { transform: scale(1.1); opacity: 0.7; }
+        }
+
+        /* ── Hero ── */
+        .hero-container {
+            position: relative; height: 100vh; width: 100%; overflow: hidden;
+            background: radial-gradient(circle at center, #2a040e 0%, #000 100%);
+        }
+        .spline-wrapper {
+            position: absolute; inset: 0;
+            z-index: 1; pointer-events: auto;
+        }
+        .hero-content {
+            position: relative; z-index: 10; height: 100%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            pointer-events: none; text-align: center; padding: 0 24px;
+        }
+
+        /* ── [FIX 2] Timeline — 모바일: 왼쪽 정렬 / PC: 중앙 지그재그 ── */
+        .timeline-wrap { position: relative; }
+
+        /* 세로 선 */
+        .timeline-wrap::before {
+            content: '';
+            position: absolute;
+            width: 1px;
+            top: 0; bottom: 0;
+            background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+            /* 모바일: 왼쪽 고정 */
+            left: 12px;
+        }
+        @media (min-width: 768px) {
+            .timeline-wrap::before {
+                left: 50%;
+                transform: translateX(-50%);
+            }
+        }
+
+        /* 타임라인 각 항목 */
+        .tl-item {
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+            /* [FIX 3] 모바일 여백 축소 */
+            margin-bottom: 3rem;
+        }
+        @media (min-width: 768px) {
+            .tl-item {
+                align-items: center;
+                margin-bottom: 6rem;
+            }
+        }
+
+        /* 도트 */
+        .tl-dot {
+            position: absolute;
+            /* 모바일: 왼쪽 선 위에 */
+            left: 12px;
+            top: 6px;
+            transform: translateX(-50%);
+            width: 12px; height: 12px;
+            background: var(--gold); border-radius: 50%;
+            box-shadow: 0 0 0 4px rgba(197,160,89,0.2);
+            z-index: 10;
+            flex-shrink: 0;
+        }
+        @media (min-width: 768px) {
+            .tl-dot {
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        /* 모바일: 콘텐츠를 도트 오른쪽에 */
+        .tl-content-right,
+        .tl-content-left {
+            padding-left: 2.5rem; /* 선(12px) + 여유 */
+            width: 100%;
+        }
+
+        /* PC 지그재그: 홀수=오른쪽, 짝수=왼쪽 */
+        @media (min-width: 768px) {
+            .tl-item { justify-content: space-between; }
+
+            /* 왼쪽 배지 (PC만 보임) */
+            .tl-badge-left  { display: flex; width: 45%; justify-content: flex-end; }
+            .tl-badge-right { display: flex; width: 45%; justify-content: flex-start; }
+
+            /* row-reverse 항목: 텍스트가 왼쪽 */
+            .tl-item.reverse { flex-direction: row-reverse; }
+            .tl-item.reverse .tl-content-left  { padding-left: 0; padding-right: 0; width: 45%; text-align: right; }
+            .tl-item:not(.reverse) .tl-content-right { padding-left: 0; width: 45%; }
+        }
+
+        /* ── Events 모바일 캐러셀 ── */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        @media (max-width: 767px) {
+            .event-carousel {
+                display: flex; overflow-x: auto;
+                scroll-snap-type: x mandatory;
+                gap: 1rem; padding-bottom: 1rem;
+            }
+            .event-card {
+                min-width: 85%; scroll-snap-align: center; flex-shrink: 0;
+            }
+        }
+
+        /* ── Video Modal ── */
+        #videoModal { transition: opacity 0.3s ease; z-index: 2000; }
+        #videoModal.hidden { opacity: 0; pointer-events: none; }
+    </style>
+</head>
+<body>
+
+    <!-- ① Preloader -->
+    <div id="preloader">
+        <div class="loader-emblem">60</div>
+        <div class="w-40 h-px bg-white/10 rounded-full overflow-hidden">
+            <div id="loader-bar" class="h-full bg-yellow-600 w-0 transition-all duration-300"></div>
+        </div>
+        <p class="text-gold mt-4 text-[10px] tracking-[0.3em] font-light serif uppercase">Connecting Future...</p>
+    </div>
+
+    <!-- ② Navigation -->
+    <nav class="fixed w-full z-[100] bg-black/40 backdrop-blur-xl border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="w-8 h-8 border border-yellow-600 flex items-center justify-center rounded-full">
+                    <span class="text-white font-bold text-xs">60</span>
+                </div>
+                <span class="font-bold tracking-tighter text-base">KHU GSB</span>
+            </div>
+            <!-- PC 메뉴 -->
+            <div class="hidden md:flex space-x-8 text-[11px] font-bold uppercase tracking-widest text-white/70">
+                <a href="#hero"    class="hover:text-gold transition">Intro</a>
+                <a href="#history" class="hover:text-gold transition">History</a>
+                <a href="#alumni"  class="hover:text-gold transition">60 Leaders</a>
+                <a href="#events"  class="hover:text-gold transition">Events</a>
+            </div>
+            <!-- 모바일 레이블 -->
+            <div class="md:hidden text-gold text-[10px] font-bold tracking-widest uppercase">60th Anniversary</div>
+        </div>
+    </nav>
+
+    <!-- ③ Hero Section -->
+    <section id="hero" class="hero-container">
+        <div class="spline-wrapper">
+            <iframe src="https://my.spline.design/distortingtypography-XrNIVWY2l0t0sYODZqB0BvBD/"
+                    frameborder="0" width="100%" height="100%"></iframe>
+        </div>
+        <div class="hero-content">
+            <div data-aos="zoom-out" data-aos-duration="2000">
+                <p class="text-gold tracking-[0.4em] mb-4 text-[10px] md:text-sm font-light uppercase">Legacy from 1966</p>
+                <h1 class="serif text-4xl md:text-8xl font-bold text-white mb-6 leading-snug drop-shadow-2xl">
+                    KHU GSB<br>
+                    <span class="italic text-gold">60th Anniversary</span>
+                </h1>
+                <!--
+                    [FIX 1] 모바일: 슬로건을 두 줄로 자연스럽게 분리
+                    - <br class="md:hidden">을 의미 단위 사이에 배치
+                    - word-break: keep-all은 전역 body에 이미 적용됨
+                -->
+                <p class="text-sm md:text-xl font-light text-white/70 md:tracking-[0.3em] leading-relaxed px-4 md:px-0">
+                    경희대학교 경영대학원,<br class="md:hidden">
+                    지혜를 미래로 투영하다
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ④ History Section -->
+    <!--
+        [FIX 2 + FIX 3]
+        - 모바일: py-12 (약 48px), PC: py-40 (160px)
+        - 타임라인 선·도트 CSS로 처리, 모바일 = 왼쪽 고정
+    -->
+    <section id="history" class="py-12 md:py-40 relative bg-black overflow-hidden">
+        <div class="max-w-6xl mx-auto px-6">
+
+            <div class="text-center mb-12 md:mb-32" data-aos="fade-up">
+                <h2 class="serif text-3xl md:text-4xl text-gold mb-4 uppercase tracking-[0.2em]">Our History</h2>
+                <div class="w-10 h-px bg-gold/50 mx-auto"></div>
+            </div>
+
+            <div class="timeline-wrap">
+
+                <!-- 1966 -->
+                <div class="tl-item" data-aos="fade-up">
+                    <div class="tl-dot"></div>
+
+                    <!-- PC 왼쪽 배지 (홀수 항목) -->
+                    <div class="tl-badge-left hidden md:flex" data-aos="fade-right">
+                        <span class="serif text-7xl font-bold text-white/20">1966</span>
+                    </div>
+
+                    <!-- 텍스트 (모바일: 오른쪽, PC: 오른쪽) -->
+                    <div class="tl-content-right md:w-[45%]" data-aos="fade-left">
+                        <span class="text-gold font-bold text-2xl md:text-3xl mb-2 block">1966</span>
+                        <h3 class="text-lg md:text-xl font-bold mb-2">경희대학교 경영대학원 설립</h3>
+                        <p class="text-gray-500 text-sm leading-relaxed font-light">
+                            국내 비즈니스 교육의 새로운 이정표를 세우며 실천적 지성을 위한 첫 항해를 시작했습니다.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 1990s (PC: reverse) -->
+                <div class="tl-item reverse" data-aos="fade-up">
+                    <div class="tl-dot"></div>
+
+                    <!-- PC 오른쪽 배지 (짝수 항목) -->
+                    <div class="tl-badge-right hidden md:flex" data-aos="fade-left">
+                        <span class="serif text-7xl font-bold text-white/20">1990</span>
+                    </div>
+
+                    <!-- 텍스트 (모바일: 왼쪽 선 오른쪽, PC: 왼쪽 정렬 역방향) -->
+                    <div class="tl-content-left md:w-[45%] md:text-right" data-aos="fade-right">
+                        <span class="text-gold font-bold text-2xl md:text-3xl mb-2 block uppercase">1990s</span>
+                        <h3 class="text-lg md:text-xl font-bold mb-2">글로벌 비즈니스 리더십 강화</h3>
+                        <p class="text-gray-500 text-sm leading-relaxed font-light">
+                            글로벌 스탠다드에 맞춘 교육과정 개편과 해외 명문대학과의 교류를 통해 세계로 뻗어나가는 발판을 마련했습니다.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 2026 -->
+                <div class="tl-item" data-aos="fade-up" style="margin-bottom:0">
+                    <div class="tl-dot"></div>
+
+                    <div class="tl-badge-left hidden md:flex" data-aos="fade-right">
+                        <span class="serif text-7xl font-bold text-gold/10">2026</span>
+                    </div>
+
+                    <div class="tl-content-right md:w-[45%]" data-aos="fade-left">
+                        <span class="text-gold font-bold text-2xl md:text-3xl mb-2 block uppercase">2026</span>
+                        <h3 class="text-lg md:text-xl font-bold mb-2">미래 100년을 위한 비전 선포</h3>
+                        <p class="text-gray-500 text-sm leading-relaxed font-light">
+                            60년의 전통을 계승하고 디지털 대전환 시대를 선도하는 지능형 경영 교육 플랫폼을 완성합니다.
+                        </p>
+                    </div>
+                </div>
+
+            </div><!-- /timeline-wrap -->
+        </div>
+    </section>
+
+    <!-- ⑤ Alumni Grid Section -->
+    <!-- [FIX 3] py-12 md:py-40 -->
+    <section id="alumni" class="py-12 md:py-40 bg-[#050505]">
+        <div class="max-w-[1600px] mx-auto px-6">
+
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 md:mb-16 gap-3" data-aos="fade-up">
+                <div>
+                    <h2 class="serif text-2xl md:text-4xl text-white font-bold mb-1 uppercase tracking-tight">60 Leaders</h2>
+                    <p class="text-gold/50 text-[10px] tracking-widest uppercase">School-shining Alumni</p>
+                </div>
+                <div class="text-[9px] text-white/30 uppercase tracking-widest hidden md:block">Click for interview video</div>
+            </div>
+
+            <!-- Grid: 모바일 4열 / sm 6열 / md 8열 / lg 10열 -->
+            <div id="alumni-grid" class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-1 md:gap-1.5"></div>
+        </div>
+    </section>
+
+    <!-- ⑥ Events & News Section -->
+    <!-- [FIX 3] py-12 md:py-40 -->
+    <section id="events" class="py-12 md:py-40 bg-black">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="serif text-3xl md:text-4xl text-center text-white mb-12 md:mb-20 uppercase tracking-widest" data-aos="fade-up">
+                Events &amp; News
+            </h2>
+
+            <div class="event-carousel md:grid md:grid-cols-3 md:gap-8 hide-scrollbar">
+
+                <!-- Event 1 -->
+                <div class="event-card group snap-center bg-zinc-900/40 border border-white/5 rounded-2xl overflow-hidden mb-6 md:mb-0" data-aos="fade-up" data-aos-delay="0">
+                    <div class="aspect-video bg-zinc-800 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1540575861501-7cf05a4b125a?auto=format&fit=crop&q=80"
+                             alt="60주년 기념 학술 세미나"
+                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    </div>
+                    <div class="p-6 md:p-8">
+                        <span class="text-gold text-[10px] font-bold uppercase tracking-widest block mb-3">Special Event</span>
+                        <h4 class="text-lg md:text-xl font-bold text-white mb-3">60주년 기념 학술 세미나</h4>
+                        <p class="text-gray-500 text-xs md:text-sm leading-relaxed mb-6">
+                            대한민국 비즈니스의 과거와 현재, 그리고 인공지능이 바꿀 미래를 조망하는 최고 권위의 세미나입니다.
+                        </p>
+                        <div class="text-[9px] text-white/40 border-t border-white/5 pt-4">2026. 06. 10 | 오비스홀</div>
+                    </div>
+                </div>
+
+                <!-- Event 2 -->
+                <div class="event-card group snap-center bg-zinc-900/40 border border-white/5 rounded-2xl overflow-hidden mb-6 md:mb-0" data-aos="fade-up" data-aos-delay="100">
+                    <div class="aspect-video bg-zinc-800 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&q=80"
+                             alt="전동문 홈커밍 데이"
+                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    </div>
+                    <div class="p-6 md:p-8">
+                        <span class="text-gold text-[10px] font-bold uppercase tracking-widest block mb-3">Networking</span>
+                        <h4 class="text-lg md:text-xl font-bold text-white mb-3">전동문 홈커밍 데이</h4>
+                        <p class="text-gray-500 text-xs md:text-sm leading-relaxed mb-6">
+                            60년 경희 경영의 역사를 일궈온 동문들이 한자리에 모여 새로운 유대를 맺는 축제의 장입니다.
+                        </p>
+                        <div class="text-[9px] text-white/40 border-t border-white/5 pt-4">2026. 10. 15 | 캠퍼스 일원</div>
+                    </div>
+                </div>
+
+                <!-- Event 3 -->
+                <div class="event-card group snap-center bg-zinc-900/40 border border-white/5 rounded-2xl overflow-hidden" data-aos="fade-up" data-aos-delay="200">
+                    <div class="aspect-video bg-zinc-800 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80"
+                             alt="60주년 기념관 건립 기금"
+                             class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    </div>
+                    <div class="p-6 md:p-8">
+                        <span class="text-gold text-[10px] font-bold uppercase tracking-widest block mb-3">Foundation</span>
+                        <h4 class="text-lg md:text-xl font-bold text-white mb-3">60주년 기념관 건립 기금</h4>
+                        <p class="text-gray-500 text-xs md:text-sm leading-relaxed mb-6">
+                            후배들에게 더 나은 교육 환경을 선물하고, 경희 경영의 자부심을 영구히 기록할 공간을 만듭니다.
+                        </p>
+                        <div class="text-[9px] text-white/40 border-t border-white/5 pt-4">Fundraising Ongoing</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- ⑦ Video Modal -->
+    <div id="videoModal" class="fixed inset-0 bg-black/95 z-[1000] hidden flex items-center justify-center p-4">
+        <button onclick="closeVideo()" class="absolute top-6 right-6 md:top-10 md:right-10 text-white hover:text-gold transition text-4xl font-thin leading-none">&times;</button>
+        <div class="w-full max-w-5xl aspect-video rounded-xl overflow-hidden shadow-2xl bg-black border border-white/10">
+            <iframe id="videoPlayer" class="w-full h-full" src="" frameborder="0"
+                    allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <!-- ⑧ Footer -->
+    <footer class="py-12 md:py-24 bg-black border-t border-white/5 text-center px-6">
+        <div class="w-10 h-10 border border-gold/40 rounded-full flex items-center justify-center mx-auto mb-8">
+            <span class="text-gold font-bold text-xs">60</span>
+        </div>
+        <h5 class="serif text-base font-bold mb-3 uppercase tracking-widest text-white/90">Kyung Hee University GSB</h5>
+        <p class="text-[8px] text-gray-700 uppercase tracking-[0.4em] mb-8">60 Years of Excellence, Reflecting the Future</p>
+        <p class="text-[8px] text-gray-800 uppercase tracking-widest leading-loose">
+            서울특별시 동대문구 경희대로 26 경희대학교 경영대학원<br>
+            © 2026. KHU GSB. All Rights Reserved.
+        </p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        /* ── AOS ── */
+        AOS.init({ duration: 1000, once: true, offset: 50 });
+
+        /* ── Preloader ── */
+        const preloader = document.getElementById('preloader');
+        const loaderBar  = document.getElementById('loader-bar');
+        let finished = false;
+
+        function finishLoading() {
+            if (finished) return;
+            finished = true;
+            // 진행 바를 100%로 채우고
+            loaderBar.style.width = '100%';
+            // 짧은 딜레이 후 fade-out
+            setTimeout(() => {
+                preloader.style.opacity = '0';
+                preloader.style.visibility = 'hidden';
+                // 트랜지션이 끝나면 완전히 제거
+                setTimeout(() => { preloader.style.display = 'none'; }, 650);
+            }, 200);
+        }
+
+        // 가짜 진행 바 애니메이션
+        let prog = 0;
+        const barTimer = setInterval(() => {
+            prog += Math.random() * 25;
+            if (prog >= 95) { prog = 95; clearInterval(barTimer); }
+            loaderBar.style.width = prog + '%';
+        }, 150);
+
+        // 최대 1.5초 후 강제 종료 (Spline iframe 대기 방지)
+        const forceTimer = setTimeout(finishLoading, 1500);
+        window.addEventListener('load', () => { clearTimeout(forceTimer); finishLoading(); });
+
+        /* ── Alumni Grid (JS 렌더링 → 가독성 개선) ── */
+        const grid = document.getElementById('alumni-grid');
+        for (let i = 1; i <= 60; i++) {
+            const delay = (i % 5) * 30;
+            grid.insertAdjacentHTML('beforeend', `
+                <div class="relative aspect-square overflow-hidden group cursor-pointer bg-neutral-900 border border-white/5"
+                     onclick="openVideo('dQw4w9WgXcQ')"
+                     data-aos="fade-up" data-aos-delay="${delay}">
+                    <img src="https://i.pravatar.cc/300?u=gsb_khu_${i}"
+                         alt="동문 ${i}"
+                         loading="lazy"
+                         class="w-full h-full object-cover grayscale opacity-50 transition-all duration-700 group-hover:grayscale-0 group-hover:scale-110 group-hover:opacity-100">
+                    <div class="absolute inset-0 bg-[#8A1538]/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-center items-center p-1 text-center">
+                        <span class="font-bold text-[8px] md:text-xs text-white leading-tight">동문 ${i}</span>
+                        <span class="text-[6px] md:text-[8px] text-gold mt-1">${i + 80}학번</span>
+                    </div>
+                </div>
+            `);
+        }
+
+        /* ── Video Modal ── */
+        const modal  = document.getElementById('videoModal');
+        const player = document.getElementById('videoPlayer');
+
+        function openVideo(id) {
+            player.src = `https://www.youtube.com/embed/${id}?autoplay=1&modestbranding=1&rel=0`;
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeVideo() {
+            player.src = '';
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        window.addEventListener('keydown', e => { if (e.key === 'Escape') closeVideo(); });
+    </script>
+</body>
+</html>

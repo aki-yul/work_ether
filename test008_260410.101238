@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>경희대학교 경영대학원 60주년 | 60 Years of Legacy</title>
+    
+    <!-- External Libraries -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Pretendard:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --deep-red: #8A1538;
+            --gold: #C5A059;
+            --black: #000000;
+        }
+
+        /* Base & Typography */
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: var(--black);
+            color: #ffffff;
+            margin: 0;
+            overflow-x: hidden;
+            word-break: keep-all; /* 단어 단위 줄바꿈 방지 */
+        }
+        .serif { font-family: 'Noto Serif KR', serif; }
+        .text-gold { color: var(--gold); }
+        .bg-deep-red { background-color: var(--deep-red); }
+        
+        /* [1] Preloader */
+        #preloader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--deep-red); z-index: 10000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.8s ease-in-out, visibility 0.8s;
+        }
+        .loader-emblem {
+            width: 80px; height: 80px; border: 2px solid var(--gold);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; font-weight: bold; color: #fff;
+            animation: pulse-spin 2s infinite ease-in-out;
+            margin-bottom: 1.5rem;
+        }
+        @keyframes pulse-spin {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(197, 160, 89, 0.4); }
+            50% { transform: scale(1.05); box-shadow: 0 0 0 15px rgba(197, 160, 89, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(197, 160, 89, 0); }
+        }
+
+        /* [2] Hero Section Spline Control */
+        .hero-container {
+            position: relative; height: 100vh; width: 100%; overflow: hidden;
+            background: radial-gradient(circle at center, #2a040e 0%, #000 100%);
+        }
+        .spline-wrapper {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1; pointer-events: auto;
+        }
+        .hero-content {
+            position: relative; z-index: 10; height: 100%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            pointer-events: none; text-align: center; padding: 0 24px;
+        }
+        /* Mobile Break-keep */
+        .break-keep { word-break: keep-all; line-height: 1.6; }
+
+        /* [3] History Timeline (Mobile Optimized) */
+        .timeline-line {
+            position: absolute; width: 1px; height: 100%;
+            background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+            left: 20px; /* Mobile Default */
+        }
+        @media (min-width: 768px) {
+            .timeline-line { left: 50%; transform: translateX(-50%); }
+        }
+
+        /* [4] Events Section (Mobile Carousel) */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        @media (max-width: 768px) {
+            .event-carousel {
+                display: flex; overflow-x: auto; scroll-snap-type: x mandatory;
+                gap: 1rem; padding: 0 24px;
+            }
+            .event-card {
+                min-width: 80%; scroll-snap-align: center;
+            }
+        }
+
+        /* Video Modal */
+        #videoModal.hidden { opacity: 0; pointer-events: none; }
+        #videoModal { transition: all 0.5s ease; z-index: 2000; }
+    </style>
+</head>
+<body>
+
+    <!-- 1. Preloader -->
+    <div id="preloader">
+        <div class="loader-emblem">60</div>
+        <div class="w-40 h-[1px] bg-white/10 rounded-full overflow-hidden">
+            <div id="loader-bar" class="h-full bg-gold w-0 transition-all duration-300"></div>
+        </div>
+        <p class="text-gold mt-4 text-[10px] tracking-[0.3em] font-light serif uppercase">Reflecting Legacy...</p>
+    </div>
+
+    <!-- 2. Navigation -->
+    <nav class="fixed w-full z-[100] bg-black/30 backdrop-blur-xl border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="w-8 h-8 border border-gold flex items-center justify-center rounded-full">
+                    <span class="text-white font-bold text-xs">60</span>
+                </div>
+                <span class="font-bold tracking-tighter text-base">KHU GSB</span>
+            </div>
+            <div class="hidden md:flex space-x-8 text-[11px] font-bold uppercase tracking-widest text-white/70">
+                <a href="#hero" class="hover:text-gold transition">Home</a>
+                <a href="#history" class="hover:text-gold transition">History</a>
+                <a href="#alumni" class="hover:text-gold transition">60 Alumni</a>
+                <a href="#events" class="hover:text-gold transition">Events</a>
+            </div>
+            <div class="md:hidden text-gold text-[10px] font-bold tracking-widest uppercase">60th Anniv.</div>
+        </div>
+    </nav>
+
+    <!-- 3. Hero Section (Spline Interative) -->
+    <section id="hero" class="hero-container">
+        <div class="spline-wrapper">
+            <iframe src="https://my.spline.design/distortingtypography-XrNIVWY2l0t0sYODZqB0BvBD/" frameborder="0" width="100%" height="100%"></iframe>
+        </div>
+        <div class="hero-content">
+            <div data-aos="zoom-out" data-aos-duration="2000">
+                <p class="text-gold tracking-[0.4em] mb-4 text-xs md:text-sm font-light uppercase">Established 1966</p>
+                <h1 class="serif text-4xl md:text-8xl font-bold text-white mb-6 leading-[1.2] drop-shadow-2xl">
+                    KHU GSB<br><span class="italic text-gold">60th Anniversary</span>
+                </h1>
+                <p class="text-sm md:text-xl font-light text-white/70 tracking-[0.2em] md:tracking-[0.4em] break-keep">
+                    경희대학교 경영대학원,<br class="md:hidden"> 지혜를 미래로 투영하다
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. History Section (Zig-Zag to List) -->
+    <section id="history" class="py-20 md:py-40 relative bg-black overflow-hidden">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-20 md:mb-32" data-aos="fade-up">
+                <h2 class="serif text-3xl md:text-4xl text-gold mb-4 uppercase tracking-[0.2em]">GSB Chronology</h2>
+                <div class="w-10 h-px bg-gold/50 mx-auto"></div>
+            </div>
+
+            <div class="relative">
+                <div class="timeline-line"></div>
+
+                <!-- 1966 -->
+                <div class="relative flex flex-col md:flex-row items-start md:items-center justify-between mb-24 md:mb-40 w-full">
+                    <!-- PC Date (Left) -->
+                    <div class="md:w-[45%] text-right hidden md:block" data-aos="fade-right">
+                        <span class="serif text-8xl font-bold text-white/5 block leading-none">1966</span>
+                    </div>
+                    <!-- Dot -->
+                    <div class="absolute left-[20px] md:left-1/2 -translate-x-1/2 z-20 w-3 h-3 bg-gold rounded-full ring-4 ring-gold/20"></div>
+                    <!-- Content (Right on Mobile) -->
+                    <div class="pl-12 md:pl-0 md:w-[45%]" data-aos="fade-left">
+                        <span class="text-gold font-bold text-2xl md:text-3xl mb-2 block">1966</span>
+                        <h3 class="text-lg md:text-xl font-bold mb-3">개원 및 초대 원장 취임

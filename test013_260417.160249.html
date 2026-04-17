@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>경희대학교 경영대학원 60주년 | 60 Years of Legacy</title>
+    
+    <!-- External Libraries -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Pretendard:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --deep-red: #8A1538;
+            --gold: #C5A059;
+            --black: #000000;
+        }
+
+        /* ── Base ── */
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: var(--black);
+            color: #ffffff;
+            margin: 0;
+            overflow-x: hidden;
+            word-break: keep-all; 
+        }
+        .serif { font-family: 'Noto Serif KR', serif; }
+        .text-gold { color: var(--gold); }
+        .bg-gold { background-color: var(--gold); }
+        
+        /* [1] Preloader: Force hide script included at bottom */
+        #preloader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--deep-red); z-index: 10000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.6s ease-in-out;
+        }
+        .loader-emblem {
+            width: 70px; height: 70px; border: 2px solid var(--gold);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem; font-weight: bold; color: #fff;
+            animation: pulse-spin 2s infinite ease-in-out;
+            margin-bottom: 1.5rem;
+        }
+        @keyframes pulse-spin {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* [2] Hero Spline Container */
+        .hero-container {
+            position: relative; height: 100vh; width: 100%; overflow: hidden;
+            background: radial-gradient(circle at center, #2a040e 0%, #000 100%);
+        }
+        .spline-wrapper { position: absolute; inset: 0; z-index: 1; pointer-events: auto; }
+        .hero-content {
+            position: relative; z-index: 10; height: 100%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            pointer-events: none; text-align: center; padding: 0 24px;
+        }
+
+        /* [3] History Timeline (Mobile optimized) */
+        .timeline-line {
+            position: absolute; width: 1px; height: 100%;
+            background: linear-gradient(to bottom, transparent, var(--gold), transparent);
+            left: 20px; 
+        }
+        @media (min-width: 768px) {
+            .timeline-line { left: 50%; transform: translateX(-50%); }
+        }
+
+        /* [4] Scroll Snap Carousel (Events & News) */
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        @media (max-width: 767px) {
+            .event-carousel {
+                display: flex; overflow-x: auto; scroll-snap-type: x mandatory;
+                gap: 1rem; padding: 0 24px;
+            }
+            .event-card { min-width: 85%; scroll-snap-align: center; flex-shrink: 0; }
+        }
+
+        /* Video Modal */
+        #videoModal.hidden { opacity: 0; pointer-events: none; }
+        #videoModal { transition: all 0.5s ease; z-index: 2000; }
+
+        /* Dark Input */
+        .dark-input {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white; padding: 12px 16px; border-radius: 8px;
+            transition: all 0.3s;
+        }
+        .dark-input:focus { border-color: var(--gold); background: rgba(255,255,255,0.08); outline: none; }
+    </style>
+</head>
+<body class="bg-black">
+
+    <!-- 1. Preloader -->
+    <div id="preloader">
+        <div class="loader-emblem">60</div>
+        <div class="w-40 h-[1px] bg-white/10 rounded-full overflow-hidden">
+            <div id="loader-bar" class="h-full bg-gold w-0 transition-all duration-300"></div>
+        </div>
+        <p class="text-gold mt-4 text-[10px] tracking-[0.3em] font-light serif uppercase">Reflecting the Future...</p>
+    </div>
+
+    <!-- 2. Navigation -->
+    <nav class="fixed w-full z-[100] bg-black/40 backdrop-blur-xl border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2 pointer-events-auto">
+                <div class="w-8 h-8 border border-gold flex items-center justify-center rounded-full">
+                    <span class="text-white font-bold text-xs">60</span>
+                </div>
+                <span class="font-bold tracking-tighter text-base">KHU GSB</span>
+            </div>
+            <div class="hidden md:flex space-x-8 text-[11px] font-bold uppercase tracking-widest text-white/70 pointer-events-auto">
+                <a href="#hero" class="hover:text-gold transition">Intro</a>
+                <a href="#history" class="hover:text-gold transition">History</a>
+                <a href="#alumni" class="hover:text-gold transition">60 Leaders</a>
+                <a href="#guestbook" class="hover:text-gold transition">Guestbook</a>
+            </div>
+            <div class="md:hidden text-gold text-[10px] font-bold tracking-widest uppercase">60th Anniversary</div>
+        </div>
+    </nav>
+
+    <!-- 3. Hero Section (Spline 3D) -->
+    <section id="hero" class="hero-container">
+        <div class="spline-wrapper">
+            <iframe src="https://my.spline.design/distortingtypography-XrNIVWY2l0t0sYODZqB0BvBD/" frameborder="0" width="100%" height="100%"></iframe>
+        </div>
+        <div class="hero-content px-6">
+            <div data-aos="zoom-out" data-aos-duration="2000">
+                <p class="text-gold tracking-[0.4em] mb-4 text-[10px] md:text-sm font-light uppercase">Legacy from 1966</p>
+                <h1 class="serif text-4xl md:text-8xl font-bold text-white mb-6 leading-[1.2] drop-shadow-2xl">
+                    KHU GSB<br><span class="italic text-gold">60th Anniversary</span>
+                </h1>
+                <p class="text-[14px] md:text-xl font-light text-white/70 tracking-normal md:tracking-[0.3em] leading-relaxed break-keep">
+                    경희대학교 경영대학원,<br class="md:hidden"> 지혜를 미래로 투영하다
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. History Section (Zig-Zag to List) -->
+    <section id="history" class="py-16 md:py-40 bg-black relative">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-16 md:mb-32" data-aos="fade-up">
+                <h2 class="serif text-3xl md:text-4xl text-gold mb-4 uppercase tracking-[0.2em]">Our History</h2>
+                <div class="w-10 h-px bg-gold/50 mx-auto"></div>
+            </div>
+            <div class="relative">
+                <div class="timeline-line"></div>
+                <!-- 1966 -->
+                <div class="relative flex flex-col md:flex-row items-start md:items-center justify-between mb-20 md:mb-40 w-full">
+                    <div class="md:w-[45%] text-right hidden md:block" data-aos="fade-right">
+                        <span class="serif text-7xl font-bold text-white/5 block">1966</span>
+                    </div>
+                    <div class="absolute left-[20px] md:left-1/2 -translate-x-1/2 z-20 w-3 h-3 bg-gold rounded-full ring-4 ring-gold/20"></div>
+                    <div class="pl-12 md:pl-0 md:w-[45%]" data-aos="fade-left">
+                        <span class="text-gold font-bold text-2xl md:text-3xl mb-2 block">1966</span>
+                        <h3 class="text-lg md:text-xl font-bold mb-3">경희대학교 경영대학원 설립</h3>
+                        <p class="text-gray-500 text-sm md:text-base leading-relaxed font-light">국내 비즈니스 교육의 새로운 이정표를 세우며 실천적 지성을 위한 첫 항해를 시작했습니다.</p>
+                    </div>
+                </div>
+                <!-- 2026 -->
+                <div class="relative flex flex-col md:flex-row items-start md:items-center justify-between w-full">
+                    <div class="md:w-[45%] text-right hidden md:block" data-aos="fade-right">
+                        <span class="serif text-7xl font-bold text-gold/10 block uppercase">2026</span>
+                    </div>
+                    <div class="absolute left-[20px] md:left-1/2 -translate-x-1/2 z-20 w-3 h-3 bg-gold rounded-full ring-4 ring-gold/20"></div>
+                    <div class="pl-12 md:pl-0 md:w-[45%]" data-aos="fade-left">
+                        <span class="text-gold font-bold text-2xl md:text-3xl mb-2 block uppercase">2026</span>
+                        <h3 class="text-lg md:text-xl font-bold mb-3">미래 100년을 위한 비전 선포</h3>
+                        <p class="text-gray-500 text-sm md:text-base leading-relaxed font-light">60년의 전통을 계승하고 디지털 대전환 시대를 선도하는 지능형 경영 교육 플랫폼을 완성합니다.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Infographic Section -->
+    <section class="py-16 md:py-24 bg-[#050505] border-y border-white/5">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12 text-center">
+                <div data-aos="fade-up" data-aos-delay="100">
+                    <div class="serif text-4xl md:text-5xl font-bold text-gold mb-2">20,000+</div>
+                    <div class="text-[10px] text-white/40 uppercase tracking-widest">누적 졸업생</div>
+                </div>
+                <div data-aos="fade-up" data-aos-delay="200">
+                    <div class="serif text-4xl md:text-5xl font-bold text-gold mb-2">TOP 10</div>
+                    <div class="text-[10px] text-white/40 uppercase tracking-widest">CEO 배출 순위</div>
+                </div>
+                <div data-aos="fade-up" data-aos-delay="300">
+                    <div class="serif text-4xl md:text-5xl font-bold text-gold mb-2">50+</div>
+                    <div class="text-[10px] text-white/40 uppercase tracking-widest">글로벌 파트너국</div>
+                </div>
+                <div data-aos="fade-up" data-aos-delay="400">
+                    <div class="serif text-4xl md:text-5xl font-bold text-gold mb-2">100억+</div>
+                    <div class="text-[10px] text-white/40 uppercase tracking-widest">누적 장학 금액</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. Legacy Messages Carousel (수정된 슬라이더 섹션) -->
+    <section id="legacy-messages" class="py-16 md:py-28 bg-black overflow-hidden relative border-b border-white/5">
+        <div class="max-w-6xl mx-auto px-6 relative">
+            <div id="msg-slider" class="flex overflow-x-auto snap-x snap-mandatory scroll-smooth hide-scrollbar">
+                <!-- Slide 1 -->
+                <div class="min-w-full snap-center flex flex-col md:flex-row items-center gap-10 md:gap-20 px-4">
+                    <div class="w-full md:w-1/3 text-center md:text-left">
+                        <div class="w-28 h-28 md:w-36 md:h-36 bg-zinc-800 rounded-full mx-auto md:mx-0 mb-6 overflow-hidden border border-gold/30">
+                            <img src="https://i.pravatar.cc/300?u=dean_khu" alt="강재식 원장" class="w-full h-full object-cover grayscale">
+                        </div>
+                        <h4 class="serif text-xl md:text-2xl font-bold text-white mb-1">강 재 식</h4>
+                        <p class="text-xs md:text-sm text-gold uppercase tracking-widest">경희대학교 경영대학원장</p>
+                    </div>
+                    <div class="w-full md:w-2/3 relative">
+                        <span class="absolute -top-10 -left-6 serif text-9xl leading-none select-none opacity-20 text-gold">"</span>
+                        <p class="serif text-lg md:text-2xl leading-relaxed text-white/85 italic relative z-10">
+                            경희 경영의 60년은 도전을 두려워하지 않는 개척자의 역사였습니다. 우리는 이제 과거의 영광을 지혜로 삼아, 새로운 100년을 설계하겠습니다.
+                        </p>
+                        <p class="mt-6 text-sm font-light uppercase tracking-[0.3em] text-white/30">— Legacy & Future</p>
+                    </div>
+                </div>
+                <!-- Slide 2 -->
+                <div class="min-w-full snap-center flex flex-col md:flex-row items-center gap-10 md:gap-20 px-4">
+                    <div class="w-full md:w-1/3 text-center md:text-left">
+                        <div class="w-28 h-28 md:w-36 md:h-36 bg-zinc-800 rounded-full mx-auto md:mx-0 mb-6 overflow-hidden border border-gold/30">
+                            <img src="https://i.pravatar.cc/300?u=head_alumni" alt="김경희 회장" class="w-full h-full object-cover grayscale">
+                        </div>
+                        <h4 class="serif text-xl md:text-2xl font-bold text-white mb-1">김 경 희</h4>
+                        <p class="text-xs md:text-sm text-gold uppercase tracking-widest">총동문회장</p>
+                    </div>
+                    <div class="w-full md:w-2/3 relative">
+                        <span class="absolute -top-10 -left-6 serif text-9xl leading-none select-none opacity-20 text-gold">"</span>
+                        <p class="serif text-lg md:text-2xl leading-relaxed text-white/85 italic relative z-10">
+                            60년의 긍지, 하나 된 경희 경영의 힘을 보여줍시다. 동문 여러분의 성공이 곧 우리 대학원의 역사이며 자부심입니다.
+                        </p>
+                        <p class="mt-6 text-sm font-light uppercase tracking-[0.3em] text-white/30">— Solidarity & Pride</p>
+                    </div>
+                </div>
+                <!-- Slide 3 -->
+                <div class="min-w-full snap-center flex flex-col md:flex-row items-center gap-10 md:gap-20 px-4">
+                    <div class="w-full md:w-1/3 text-center md:text-left">
+                        <div class="w-28 h-28 md:w-36 md:h-36 bg-zinc-800 rounded-full mx-auto md:mx-0 mb-6 overflow-hidden border border-gold/30">
+                            <img src="https://i.pravatar.cc/300?u=planning" alt="이경희 실장" class="w-full h-full object-cover grayscale">
+                        </div>
+                        <h4 class="serif text-xl md:text-2xl font-bold text-white mb-1">이 경 희</h4>
+                        <p class="text-xs md:text-sm text-gold uppercase tracking-widest">기획조정실장</p>
+                    </div>
+                    <div class="w-full md:w-2/3 relative">
+                        <span class="absolute -top-10 -left-6 serif text-9xl leading-none select-none opacity-20 text-gold">"</span>
+                        <p class="serif text-lg md:text-2xl leading-relaxed text-white/85 italic relative z-10">
+                            미래 세대를 위한 혁신적인 교육 환경 구축에 앞장서겠습니다. 시대를 읽는 통찰력을 길러내는 요람이 되겠습니다.
+                        </p>
+                        <p class="mt-6 text-sm font-light uppercase tracking-[0.3em] text-white/30">— Innovation & Vision</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Carousel Controls -->
+            <div class="absolute top-1/2 -translate-y-1/2 left-0 right-0 flex justify-between px-2 pointer-events-none">
+                <button onclick="moveMsgSlider('prev')" class="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-white pointer-events-auto hover:bg-gold hover:text-black transition-all">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                </button>
+                <button onclick="moveMsgSlider('next')" class="w-10 h-10 flex items-center justify-center rounded-full bg-white/5 border border-white/10 text-white pointer-events-auto hover:bg-gold hover:text-black transition-all">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+            </div>
+            <!-- Indicator Dots -->
+            <div id="msg-dots" class="flex justify-center gap-2 mt-12">
+                <div class="w-6 h-2 rounded-full bg-gold transition-all duration-300"></div>
+                <div class="w-2 h-2 rounded-full bg-white/20 transition-all duration-300"></div>
+                <div class="w-2 h-2 rounded-full bg-white/20 transition-all duration-300"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. Alumni Grid Section -->
+    <section id="alumni" class="py-16 md:py-40 bg-[#050505]">
+        <div class="max-w-[1600px] mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-4" data-aos="fade-up">
+                <div>
+                    <h2 class="serif text-2xl md:text-4xl text-white font-bold mb-1 uppercase tracking-tight">60 Leaders</h2>
+                    <p class="text-gold/50 text-[10px] tracking-widest uppercase">School-shining Alumni</p>
+                </div>
+            </div>
+            <div id="alumni-grid" class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-1 md:gap-1.5"></div>
+        </div>
+    </section>
+
+    <!-- 8. Events & News Section -->
+    <section id="events" class="py-16 md:py-40 bg-black">
+        <div class="max-w-7xl mx-auto px-6">
+            <h2 class="serif text-3xl md:text-4xl text-center text-white mb-20 uppercase tracking-widest" data-aos="fade-up">Events & News</h2>
+            <div class="event-carousel md:grid md:grid-cols-3 md:gap-8 hide-scrollbar">
+                <div class="event-card group snap-center bg-zinc-900/40 border border-white/5 rounded-2xl overflow-hidden mb-6 md:mb-0">
+                    <div class="aspect-video overflow-hidden"><img src="https://images.unsplash.com/photo-1540575861501-7cf05a4b125a?auto=format&fit=crop&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-duration-700"></div>
+                    <div class="p-6 md:p-8">
+                        <span class="text-gold text-[10px] font-bold uppercase tracking-widest block mb-3">Seminar</span>
+                        <h4 class="text-lg md:text-xl font-bold text-white mb-3">60주년 학술 세미나</h4>
+                        <p class="text-gray-500 text-xs md:text-sm leading-relaxed">경희 경영의 과거와 미래를 조망하는 학술 행사입니다.</p>
+                    </div>
+                </div>
+                <div class="event-card group snap-center bg-zinc-900/40 border border-white/5 rounded-2xl overflow-hidden mb-6 md:mb-0">
+                    <div class="aspect-video overflow-hidden"><img src="https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-duration-700"></div>
+                    <div class="p-6 md:p-8">
+                        <span class="text-gold text-[10px] font-bold uppercase tracking-widest block mb-3">Networking</span>
+                        <h4 class="text-lg md:text-xl font-bold text-white mb-3">전동문 홈커밍 데이</h4>
+                        <p class="text-gray-500 text-xs md:text-sm leading-relaxed">60년의 우정을 나누는 특별한 밤입니다.</p>
+                    </div>
+                </div>
+                <div class="event-card group snap-center bg-zinc-900/40 border border-white/5 rounded-2xl overflow-hidden">
+                    <div class="aspect-video overflow-hidden"><img src="https://images.unsplash.com/photo-1524178232363-1fb2b075b655?auto=format&fit=crop&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-duration-700"></div>
+                    <div class="p-6 md:p-8">
+                        <span class="text-gold text-[10px] font-bold uppercase tracking-widest block mb-3">Anniversary</span>
+                        <h4 class="text-lg md:text-xl font-bold text-white mb-3">60주년 기념 화보 발간</h4>
+                        <p class="text-gray-500 text-xs md:text-sm leading-relaxed">경희 경영 60년의 기록을 화보집에 담았습니다.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 9. Digital Guestbook Section -->
+    <section id="guestbook" class="py-16 md:py-32 bg-[#050505] border-y border-white/5">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="serif text-3xl text-white font-bold mb-4 uppercase">Digital Guestbook</h2>
+                <p class="text-gold/60 text-[10px] uppercase tracking-widest">동문 여러분의 축하 메시지를 남겨주세요</p>
+            </div>
+            <div class="bg-zinc-900/50 p-6 md:p-8 rounded-2xl border border-white/5 mb-16">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" id="gb-name" placeholder="이름 / 학번" class="dark-input">
+                    <input type="text" id="gb-msg" placeholder="축하 메시지 한 줄" class="dark-input">
+                    <button onclick="addGuestEntry()" class="md:col-span-2 bg-gold text-black font-bold py-3 rounded-lg hover:bg-white transition uppercase text-sm tracking-widest">등록하기</button>
+                </div>
+            </div>
+            <div id="guestbook-list" class="space-y-4">
+                <div class="bg-zinc-900/30 p-6 rounded-xl border-l-4 border-gold">
+                    <p class="text-white/80 text-sm italic mb-2">"60주년을 진심으로 축하드립니다. 경희에서 배운 지혜가 제 인생의 큰 나침반이 되었습니다."</p>
+                    <span class="text-gold text-[10px] font-bold uppercase tracking-widest">— 김철수 (92학번)</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 10. Fundraising Section -->
+    <section class="py-16 md:py-32 bg-black">
+        <div class="max-w-5xl mx-auto px-6">
+            <div class="border border-gold p-8 md:p-16 rounded-3xl text-center relative overflow-hidden" data-aos="zoom-in">
+                <div class="relative z-10">
+                    <h3 class="serif text-2xl md:text-4xl font-bold text-white mb-6 uppercase tracking-tight">60주년 기념 발전기금 참여</h3>
+                    <p class="text-white/60 text-sm md:text-lg mb-10 max-w-2xl mx-auto">동문 여러분의 후원은 후배들의 꿈을 키우고 경희 경영이 세계로 도약하는 동력이 됩니다.</p>
+                    <a href="#" class="inline-block bg-gold text-black font-bold px-10 py-4 rounded-full hover:bg-white transition uppercase text-sm tracking-widest">발전기금 참여하기</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Video Modal -->
+    <div id="videoModal" class="fixed inset-0 bg-black/98 z-[2000] hidden flex items-center justify-center p-4">
+        <button onclick="closeVideo()" class="absolute top-6 right-6 text-white hover:text-gold transition text-4xl">&times;</button>
+        <div class="w-full max-w-5xl aspect-video rounded-xl overflow-hidden shadow-2xl bg-black border border-white/10">
+            <iframe id="videoPlayer" class="w-full h-full" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <!-- 11. Footer -->
+    <footer class="py-16 md:py-24 bg-[#050505] border-t border-white/5 text-center px-6">
+        <div class="w-10 h-10 border border-gold/40 rounded-full flex items-center justify-center mx-auto mb-8"><span class="text-gold font-bold text-xs">60</span></div>
+        <h5 class="serif text-base font-bold mb-6 uppercase tracking-widest text-white/90">Kyung Hee University GSB</h5>
+        <div class="flex justify-center space-x-6 mb-10">
+            <a href="#" class="text-white/40 hover:text-gold transition">HOME</a>
+            <a href="#" class="text-white/40 hover:text-gold transition">YOUTUBE</a>
+            <a href="#" class="text-white/40 hover:text-gold transition">INSTAGRAM</a>
+        </div>
+        <p class="text-[8px] text-gray-800 uppercase tracking-widest leading-loose">
+            서울특별시 동대문구 경희대로 26 경희대학교 경영대학원<br>
+            © 2026. KHU GSB. All Rights Reserved.
+        </p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 1000, once: true, offset: 50 });
+
+        // [1] Preloader Fix: Force remove after 2.5s
+        const preloader = document.getElementById('preloader');
+        const loaderBar = document.getElementById('loader-bar');
+        let isLoaded = false;
+        function finishLoading() {
+            if (isLoaded) return;
+            isLoaded = true;
+            loaderBar.style.width = '100%';
+            setTimeout(() => {
+                preloader.style.opacity = '0';
+                setTimeout(() => { preloader.style.display = 'none'; }, 600);
+            }, 300);
+        }
+        let prog = 0;
+        const barTimer = setInterval(() => {
+            prog += Math.random() * 20;
+            if(prog > 95) { prog = 95; clearInterval(barTimer); }
+            loaderBar.style.width = prog + '%';
+        }, 150);
+        const forceTimer = setTimeout(finishLoading, 2500);
+        window.addEventListener('load', () => { clearTimeout(forceTimer); finishLoading(); });
+
+        // [2] Legacy Messages Slider Logic
+        const msgSlider = document.getElementById('msg-slider');
+        const msgDots = document.getElementById('msg-dots').children;
+        function moveMsgSlider(direction) {
+            const slideWidth = msgSlider.offsetWidth;
+            msgSlider.scrollLeft += (direction === 'next' ? slideWidth : -slideWidth);
+        }
+        msgSlider.addEventListener('scroll', () => {
+            const index = Math.round(msgSlider.scrollLeft / msgSlider.offsetWidth);
+            Array.from(msgDots).forEach((dot, i) => {
+                dot.classList.toggle('bg-gold', i === index);
+                dot.classList.toggle('bg-white/20', i !== index);
+                dot.style.width = i === index ? '24px' : '8px';
+            });
+        });
+
+        // [3] Alumni Grid Generation
+        const alumniGrid = document.getElementById('alumni-grid');
+        for (let i = 1; i <= 60; i++) {
+            alumniGrid.insertAdjacentHTML('beforeend', `
+                <div class="relative aspect-square overflow-hidden group cursor-pointer bg-neutral-900 border border-white/5" 
+                     onclick="openVideo('dQw4w9WgXcQ')" data-aos="fade-up" data-aos-delay="${(i % 5) * 50}">
+                    <img src="https://i.pravatar.cc/300?u=gsb${i}" class="w-full h-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-110 opacity-50">
+                    <div class="absolute inset-0 bg-[#8A1538]/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-center items-center p-1 text-center">
+                        <span class="font-bold text-[8px] md:text-xs text-white">동문 ${i}</span>
+                        <span class="text-[6px] md:text-[8px] text-gold mt-1 uppercase">${i+80}학번</span>
+                    </div>
+                </div>
+            `);
+        }
+
+        // [4] Video Modal
+        const modal = document.getElementById('videoModal');
+        const player = document.getElementById('videoPlayer');
+        function openVideo(id) {
+            player.src = `https://www.youtube.com/embed/${id}?autoplay=1&modestbranding=1&rel=0`;
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeVideo() {
+            player.src = '';
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // [5] Guestbook
+        function addGuestEntry() {
+            const name = document.getElementById('gb-name').value;
+            const msg = document.getElementById('gb-msg').value;
+            if(!name || !msg) return alert("내용을 입력해주세요.");
+            const entry = `<div class="bg-zinc-900/30 p-6 rounded-xl border-l-4 border-gold"><p class="text-white/80 text-sm italic mb-2">"${msg}"</p><span class="text-gold text-[10px] font-bold uppercase tracking-widest">— ${name}</span></div>`;
+            document.getElementById('guestbook-list').insertAdjacentHTML('afterbegin', entry);
+            document.getElementById('gb-name').value = ''; document.getElementById('gb-msg').value = '';
+        }
+    </script>
+</body>
+</html>

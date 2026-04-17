@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>경희대학교 경영대학원 60주년 | 60th Anniversary of KHU GSB</title>
+    
+    <!-- External Libraries -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&family=Pretendard:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --deep-red: #8A1538;
+            --gold: #C5A059;
+            --black: #000000;
+        }
+
+        /* ── Base ── */
+        body {
+            font-family: 'Pretendard', sans-serif;
+            background-color: var(--black);
+            color: #ffffff;
+            margin: 0;
+            overflow-x: hidden;
+            word-break: keep-all; 
+        }
+        .serif { font-family: 'Noto Serif KR', serif; }
+        
+        /* [Design Fix] No Blue - Force Gold/White */
+        a, button { color: inherit; text-decoration: none; outline: none !important; }
+        .text-gold { color: var(--gold) !important; }
+        .bg-gold { background-color: var(--gold) !important; }
+        .border-gold { border-color: var(--gold) !important; }
+        
+        /* [1] Preloader (2.5s Forced) */
+        #preloader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: var(--deep-red); z-index: 10000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: opacity 0.6s ease-in-out;
+        }
+        .loader-emblem {
+            width: 70px; height: 70px; border: 2px solid var(--gold);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem; font-weight: bold; color: #fff;
+            animation: pulse-spin 2s infinite ease-in-out;
+            margin-bottom: 1.5rem;
+        }
+        @keyframes pulse-spin {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* [2] Hero Section Spline */
+        .hero-container {
+            position: relative; height: 100vh; width: 100%; overflow: hidden;
+            background: radial-gradient(circle at center, #2a040e 0%, #000 100%);
+        }
+        .spline-wrapper { position: absolute; inset: 0; z-index: 1; pointer-events: auto; }
+        .hero-content {
+            position: relative; z-index: 10; height: 100%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            pointer-events: none; text-align: center; padding: 0 24px;
+        }
+
+        /* [3] History Timeline - No Blue Points */
+        .timeline-line {
+            position: absolute; width: 1px; height: 100%;
+            background: linear-gradient(to bottom, transparent, var(--gold), transparent) !important;
+            left: 20px; 
+        }
+        @media (min-width: 768px) {
+            .timeline-line { left: 50%; transform: translateX(-50%); }
+        }
+        .tl-dot {
+            background-color: var(--gold) !important;
+            box-shadow: 0 0 0 4px rgba(197, 160, 89, 0.2) !important;
+        }
+
+        /* [4] Guestbook Scroll Custom */
+        .guestbook-scroll {
+            max-height: 400px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: var(--gold) transparent;
+        }
+        .guestbook-scroll::-webkit-scrollbar { width: 4px; }
+        .guestbook-scroll::-webkit-scrollbar-track { background: transparent; }
+        .guestbook-scroll::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 10px; }
+
+        .dark-input {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white; padding: 12px 16px; border-radius: 8px;
+            transition: all 0.3s;
+        }
+        .dark-input:focus { border-color: var(--gold); background: rgba(255,255,255,0.08); outline: none; }
+
+        /* Multimedia Filter Tabs */
+        .filter-tab.active {
+            background-color: var(--gold);
+            color: #000;
+        }
+
+        /* Video Modal */
+        #videoModal.hidden { opacity: 0; pointer-events: none; }
+        #videoModal { transition: all 0.5s ease; z-index: 20000; }
+        
+        /* Language Switcher Button */
+        .lang-btn.active { color: var(--gold); font-weight: bold; }
+    </style>
+</head>
+<body class="bg-black">
+
+    <!-- 1. Preloader -->
+    <div id="preloader">
+        <div class="loader-emblem">60</div>
+        <div class="w-40 h-[1px] bg-white/10 rounded-full overflow-hidden">
+            <div id="loader-bar" class="h-full bg-gold w-0 transition-all duration-300"></div>
+        </div>
+        <p class="text-gold mt-4 text-[10px] tracking-[0.3em] font-light serif uppercase" id="loading-text">Connecting Legacy...</p>
+    </div>
+
+    <!-- 2. Navigation (Multilingual Switcher) -->
+    <nav class="fixed w-full z-[100] bg-black/50 backdrop-blur-xl border-b border-white/5">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2 pointer-events-auto">
+                <div class="w-8 h-8 border border-gold flex items-center justify-center rounded-full">
+                    <span class="text-white font-bold text-xs">60</span>
+                </div>
+                <span class="font-bold tracking-tighter text-base text-white">KHU GSB</span>
+            </div>
+            
+            <!-- PC Menu -->
+            <div class="hidden md:flex space-x-8 text-[11px] font-bold uppercase tracking-widest text-white/70 pointer-events-auto">
+                <a href="#hero" class="hover:text-gold transition lang-key" data-key="menu-intro">Intro</a>
+                <a href="#history" class="hover:text-gold transition lang-key" data-key="menu-history">History</a>
+                <a href="#archive" class="hover:text-gold transition lang-key" data-key="menu-archive">Archive</a>
+                <a href="#alumni" class="hover:text-gold transition lang-key" data-key="menu-alumni">60 Leaders</a>
+            </div>
+
+            <!-- Language Switcher -->
+            <div class="flex space-x-3 text-[10px] text-white/40 font-bold pointer-events-auto">
+                <button onclick="changeLang('KO')" class="lang-btn active transition" id="btn-ko">KO</button>
+                <span>|</span>
+                <button onclick="changeLang('EN')" class="lang-btn transition" id="btn-en">EN</button>
+                <span>|</span>
+                <button onclick="changeLang('CN')" class="lang-btn transition" id="btn-cn">CN</button>
+                <span>|</span>
+                <button onclick="changeLang('JP')" class="lang-btn transition" id="btn-jp">JP</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 3. Hero Section (Spline 3D) -->
+    <section id="hero" class="hero-container">
+        <div class="spline-wrapper">
+            <iframe src="https://my.spline.design/distortingtypography-XrNIVWY2l0t0sYODZqB0BvBD/" frameborder="0" width="100%" height="100%"></iframe>
+        </div>
+        <div class="hero-content px-6">
+            <div data-aos="zoom-out" data-aos-duration="2000">
+                <p class="text-gold tracking-[0.4em] mb-4 text-[10px] md:text-sm font-light uppercase lang-key" data-key="hero-sub1">Legacy from 1966</p>
+                <h1 class="serif text-4xl md:text-8xl font-bold text-white mb-6 leading-[1.2] drop-shadow-2xl">
+                    KHU GSB<br><span class="italic text-gold lang-key" data-key="hero-title">60th Anniversary</span>
+                </h1>
+                <p class="text-[14px] md:text-xl font-light text-white/70 tracking-normal md:tracking-[0.3em] leading-relaxed px-6 lang-key" data-key="hero-sub2">
+                    경희대학교 경영대학원, 지혜를 미래로 투영하다
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. History Section (Restored 1990s) -->
+    <section id="history" class="py-16 md:py-40 bg-black relative overflow-hidden">
+        <div class="max-w-6xl mx-auto px-6">
+            <div class="text-center mb-16 md:mb-32" data-aos="fade-up">
+                <h2 class="serif text-3xl md:text-4xl text-gold mb-4 uppercase tracking-[0.2em] lang-key" data-key="menu-history">Our History</h2>
+                <div class="w-10 h-px bg-gold/50 mx-auto"></div>
+            </div>
+            <div class="relative">
+                <div class="timeline-line"></div>
+                
+                <!-- 1966 -->
+                <div class="relative flex flex-col md:flex-row items-start md:items-center justify-between mb-20 md:mb-40 w-full">
+                    <div class="md:w-[45%] text-right hidden md:block" data-aos="fade-right">
+                        <span class="serif text-7xl font-bold text-white/5 block">1966</span>
+                    </div>
+                    <div class="absolute left-[20px] md:left-1/2 -translate-x-1/2 z-20 w-3 h-3 bg-gold tl-dot rounded-full ring-4 ring-gold/20"></div>
+                    <div class="pl-12 md:pl-0 md:w-[45%]" data-aos="fade-left">
+                        <span class="text-gold font-bold text-2xl md:text-3xl mb-2 block uppercase">1966</span>
+                        <h3 class="text-lg md:text-xl font-bold mb-3 lang-key" data-key="history-1-title">경희대학교 경영대학원 설립</h3>
+                        <p class="text-gray-500 text-sm md:text-base leading-relaxed font-light lang-key" data-key="history-1-desc">대한민국 경영 교육의 새로운 이정표를 세우며 실천적 지성을 향한 첫 항해를 시작했습니다.</p>
+                    </div>
+                </div>
+
+                <!-- 1990s -->
+                <div class="relative flex flex-col md:flex-row-reverse items-start md:items-center justify-between mb-20 md:mb-40 w-full">
+                    <div class="md:w-[45%] text-left hidden md:block" data-aos="fade-left">
+                        <span class="serif text-7xl font-bold text-white/5 block uppercase">1990</span>
+                    </div>
+                    <div class="absolute left-[20px] md:left-1/2 -translate-x-1/2 z-20 w-3 h-3 bg-gold tl-dot rounded-full ring-4 ring-gold/20"></div>
+                    <div class="pl-12 md:pl-0 md:w-[45%] md:text-right" data-aos="fade-right">
+                        <span class="text-gold font-bold text-2xl md:text-3xl mb-2 block uppercase uppercase">1990s</span>
+                        <h3 class="text-lg md:text-xl font-bold mb-3 lang-key" data-key="history-2-title">글로벌 비즈니스 리더십 강화</h3>
+                        <p class="text-gray-500 text-sm md:text-base leading-relaxed font-light lang-key" data-key="history-2-desc">글로벌 스탠다드 교육 과정 도입 및 해외 유수 대학과의 교류를 통해 세계로 뻗어가는 발판을 마련했습니다.</p>
+                    </div>
+                </div>
+
+                <!-- 2026 -->
+                <div class="relative flex flex-col md:flex-row items-start md:items-center justify-between w-full">
+                    <div class="md:w-[45%] text-right hidden md:block" data-aos="fade-right">
+                        <span class="serif text-7xl font-bold text-gold/10 block uppercase">2026</span>
+                    </div>
+                    <div class="absolute left-[20px] md:left-1/2 -translate-x-1/2 z-20 w-3 h-3 bg-gold tl-dot rounded-full ring-4 ring-gold/20"></div>
+                    <div class="pl-12 md:pl-0 md:w-[45%]" data-aos="fade-left">
+                        <span class="text-gold font-bold text-2xl md:text-3xl mb-2 block uppercase uppercase uppercase">2026</span>
+                        <h3 class="text-lg md:text-xl font-bold mb-3 lang-key" data-key="history-3-title">미래 100년을 향한 비전 선포</h3>
+                        <p class="text-gray-500 text-sm md:text-base leading-relaxed font-light lang-key" data-key="history-3-desc">60년의 전통을 계승하고 디지털 대전환 시대를 선도하는 지능형 경영 교육 플랫폼을 완성합니다.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. PR Multimedia Gallery (Digital Archive) [NEW] -->
+    <section id="archive" class="py-16 md:py-32 bg-[#050505] border-y border-white/5">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-12" data-aos="fade-up">
+                <h2 class="serif text-3xl md:text-4xl text-white font-bold mb-4 uppercase tracking-widest lang-key" data-key="menu-archive">60th Digital Archive</h2>
+                <div class="flex flex-wrap justify-center gap-2 mt-8">
+                    <button onclick="filterArchive('all')" class="filter-tab active px-6 py-2 border border-white/10 rounded-full text-[11px] font-bold uppercase transition lang-key" data-key="filter-all">All</button>
+                    <button onclick="filterArchive('card')" class="filter-tab px-6 py-2 border border-white/10 rounded-full text-[11px] font-bold uppercase transition lang-key" data-key="filter-card">Card News</button>
+                    <button onclick="filterArchive('video')" class="filter-tab px-6 py-2 border border-white/10 rounded-full text-[11px] font-bold uppercase transition lang-key" data-key="filter-video">Shorts/Video</button>
+                    <button onclick="filterArchive('interview')" class="filter-tab px-6 py-2 border border-white/10 rounded-full text-[11px] font-bold uppercase transition lang-key" data-key="filter-interview">Interview</button>
+                </div>
+            </div>
+
+            <!-- Archive Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4" id="archive-grid">
+                <!-- Item 1 (Video) -->
+                <div class="archive-item video relative aspect-[9/16] bg-zinc-900 overflow-hidden group cursor-pointer rounded-xl" data-aos="zoom-in" onclick="openVideo('dQw4w9WgXcQ')">
+                    <img src="https://images.unsplash.com/photo-1516321497487-e288fb19713f?auto=format&fit=crop&q=80" class="w-full h-full object-cover opacity-50 transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 flex flex-col justify-end p-6 bg-gradient-to-t from-black to-transparent">
+                        <i class="fas fa-play text-gold mb-3 text-2xl"></i>
+                        <h4 class="text-xs md:text-sm font-bold text-white mb-1 lang-key" data-key="archive-1">60주년 기념 영상 (Shorts)</h4>
+                        <span class="text-[9px] text-white/40 uppercase">Video Contents</span>
+                    </div>
+                </div>
+                <!-- Item 2 (Card) -->
+                <div class="archive-item card relative aspect-[9/16] bg-zinc-900 overflow-hidden group cursor-pointer rounded-xl" data-aos="zoom-in" data-aos-delay="100">
+                    <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&q=80" class="w-full h-full object-cover opacity-50 transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 flex flex-col justify-end p-6 bg-gradient-to-t from-black to-transparent">
+                        <i class="fas fa-images text-gold mb-3 text-2xl"></i>
+                        <h4 class="text-xs md:text-sm font-bold text-white mb-1 lang-key" data-key="archive-2">경희 경영의 발자취 카드뉴스</h4>
+                        <span class="text-[9px] text-white/40 uppercase">Card News</span>
+                    </div>
+                </div>
+                <!-- Item 3 (Interview) -->
+                <div class="archive-item interview relative aspect-[9/16] bg-zinc-900 overflow-hidden group cursor-pointer rounded-xl" data-aos="zoom-in" data-aos-delay="200" onclick="openVideo('dQw4w9WgXcQ')">
+                    <img src="https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&q=80" class="w-full h-full object-cover opacity-50 transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 flex flex-col justify-end p-6 bg-gradient-to-t from-black to-transparent">
+                        <i class="fas fa-microphone text-gold mb-3 text-2xl"></i>
+                        <h4 class="text-xs md:text-sm font-bold text-white mb-1 lang-key" data-key="archive-3">자랑스러운 동문 인터뷰 01</h4>
+                        <span class="text-[9px] text-white/40 uppercase">Interview</span>
+                    </div>
+                </div>
+                <!-- Item 4 (Card) -->
+                <div class="archive-item card relative aspect-[9/16] bg-zinc-900 overflow-hidden group cursor-pointer rounded-xl" data-aos="zoom-in" data-aos-delay="300">
+                    <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80" class="w-full h-full object-cover opacity-50 transition-transform duration-700 group-hover:scale-110">
+                    <div class="absolute inset-0 flex flex-col justify-end p-6 bg-gradient-to-t from-black to-transparent">
+                        <i class="fas fa-images text-gold mb-3 text-2xl"></i>
+                        <h4 class="text-xs md:text-sm font-bold text-white mb-1 lang-key" data-key="archive-4">글로벌 네트워크 현황</h4>
+                        <span class="text-[9px] text-white/40 uppercase">Card News</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. Upcoming Offline Events [NEW] -->
+    <section id="offline-events" class="py-16 md:py-32 bg-black">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-4">
+                <div data-aos="fade-right">
+                    <h2 class="serif text-3xl md:text-4xl text-white font-bold mb-2 uppercase lang-key" data-key="event-main-title">Upcoming Offline Events</h2>
+                    <p class="text-gold/60 text-[10px] tracking-widest uppercase lang-key" data-key="event-sub-title">60주년 기념 오프라인 행사 안내</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Event 1 -->
+                <div class="bg-zinc-900/40 border border-white/5 rounded-3xl overflow-hidden flex flex-col sm:flex-row group" data-aos="fade-up">
+                    <div class="w-full sm:w-1/3 aspect-[3/4] overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    </div>
+                    <div class="w-full sm:w-2/3 p-8 flex flex-col justify-center">
+                        <div class="text-gold font-bold text-xs mb-2 uppercase tracking-widest">Main Ceremony</div>
+                        <h4 class="text-xl font-bold text-white mb-6 lang-key" data-key="event-1-name">60주년 기념 비전 선포식</h4>
+                        <ul class="text-xs text-white/50 space-y-2">
+                            <li><i class="far fa-calendar-alt text-gold mr-2"></i> <span class="lang-key" data-key="event-1-date">2026. 05. 20 (수) 14:00</span></li>
+                            <li><i class="fas fa-map-marker-alt text-gold mr-2"></i> <span class="lang-key" data-key="event-1-loc">경희대학교 평화의 전당</span></li>
+                        </ul>
+                        <button class="mt-8 px-6 py-2 border border-gold/30 text-gold text-[10px] font-bold rounded-full hover:bg-gold hover:text-black transition lang-key" data-key="event-btn">RSVP / Participation</button>
+                    </div>
+                </div>
+                <!-- Event 2 -->
+                <div class="bg-zinc-900/40 border border-white/5 rounded-3xl overflow-hidden flex flex-col sm:flex-row group" data-aos="fade-up" data-aos-delay="100">
+                    <div class="w-full sm:w-1/3 aspect-[3/4] overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&q=80" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                    </div>
+                    <div class="w-full sm:w-2/3 p-8 flex flex-col justify-center">
+                        <div class="text-gold font-bold text-xs mb-2 uppercase tracking-widest">Global Forum</div>
+                        <h4 class="text-xl font-bold text-white mb-6 lang-key" data-key="event-2-name">글로벌 비즈니스 리더 포럼</h4>
+                        <ul class="text-xs text-white/50 space-y-2">
+                            <li><i class="far fa-calendar-alt text-gold mr-2"></i> <span class="lang-key" data-key="event-2-date">2026. 06. 10 (수) 10:00</span></li>
+                            <li><i class="fas fa-map-marker-alt text-gold mr-2"></i> <span class="lang-key" data-key="event-2-loc">오비스홀 대강당</span></li>
+                        </ul>
+                        <button class="mt-8 px-6 py-2 border border-gold/30 text-gold text-[10px] font-bold rounded-full hover:bg-gold hover:text-black transition lang-key" data-key="event-btn">RSVP / Participation</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. Alumni Section -->
+    <section id="alumni" class="py-16 md:py-40 bg-[#050505]">
+        <div class="max-w-[1600px] mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-16 gap-4" data-aos="fade-up">
+                <div>
+                    <h2 class="serif text-3xl md:text-4xl text-white font-bold mb-1 uppercase tracking-tight lang-key" data-key="menu-alumni">60 Leaders</h2>
+                    <p class="text-gold/50 text-[10px] tracking-widest uppercase">The Pride of Kyung Hee</p>
+                </div>
+                <div class="text-[9px] text-white/30 uppercase tracking-widest hidden md:block">Click for interview video</div>
+            </div>
+            <div id="alumni-grid" class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-1 md:gap-1.5">
+                <!-- Generating via Script -->
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. Digital Guestbook Section (With 10 Sample Data) -->
+    <section id="guestbook" class="py-16 md:py-32 bg-[#050505] border-y border-white/5">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="text-center mb-16" data-aos="fade-up">
+                <h2 class="serif text-3xl text-white font-bold mb-4 uppercase lang-key" data-key="guest-title">Digital Guestbook</h2>
+                <p class="text-gold text-[10px] uppercase tracking-widest lang-key" data-key="guest-sub">Please leave your congratulatory message</p>
+            </div>
+            <div class="bg-zinc-900/50 p-6 md:p-8 rounded-2xl border border-white/5 mb-12">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" id="gb-name" placeholder="Name / Class Year" class="dark-input">
+                    <input type="text" id="gb-msg" placeholder="Your Message" class="dark-input">
+                    <button onclick="addGuestEntry()" class="md:col-span-2 bg-gold text-black font-bold py-3 rounded-lg hover:bg-white transition uppercase text-sm tracking-widest lang-key" data-key="guest-btn">Post Message</button>
+                </div>
+            </div>
+            <div id="guestbook-list" class="guestbook-scroll space-y-4 pr-2">
+                <!-- Initial Data will be injected here by JS -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Video Modal -->
+    <div id="videoModal" class="fixed inset-0 bg-black/98 z-[20000] hidden flex items-center justify-center p-4">
+        <button onclick="closeVideo()" class="absolute top-6 right-6 text-white hover:text-gold transition text-4xl">&times;</button>
+        <div class="w-full max-w-5xl aspect-video rounded-xl overflow-hidden shadow-2xl bg-black border border-white/10">
+            <iframe id="videoPlayer" class="w-full h-full" src="" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <!-- 9. Footer (Emblem & Detailed Info Restored) -->
+    <footer class="py-16 md:py-24 bg-black border-t border-white/5 text-center px-6">
+        <div class="w-10 h-10 border border-gold rounded-full flex items-center justify-center mx-auto mb-8">
+            <span class="text-gold font-bold text-xs">60</span>
+        </div>
+        <h5 class="serif text-base font-bold mb-2 uppercase tracking-widest text-white/90">Kyung Hee University GSB</h5>
+        <p class="text-[9px] text-white/40 uppercase tracking-[0.4em] mb-8 font-light italic">60 Years of Excellence, Reflecting the Future</p>
+        
+        <!-- Social Icons (Font Awesome) -->
+        <div class="flex justify-center space-x-6 mb-10">
+            <a href="#" class="text-white/40 hover:text-gold transition text-xl" title="Youtube"><i class="fab fa-youtube"></i></a>
+            <a href="#" class="text-white/40 hover:text-gold transition text-xl" title="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" class="text-white/40 hover:text-gold transition text-xl" title="Facebook"><i class="fab fa-facebook"></i></a>
+        </div>
+
+        <p class="text-[8px] text-zinc-700 uppercase tracking-widest leading-loose">
+            26 Kyungheedae-ro, Dongdaemun-gu, Seoul, Republic of Korea<br>
+            © 2026. KYUNG HEE UNIVERSITY GSB. ALL RIGHTS RESERVED.
+        </p>
+    </footer>
+
+    <!-- ── SCRIPTS ── -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // AOS Initialize
+        AOS.init({ duration: 1000, once: true, offset: 50 });
+
+        // [1] Multi-language Dictionary
+        const langData = {
+            'KO': {
+                'menu-intro': '소개', 'menu-history': '연혁', 'menu-archive': '아카이브', 'menu-alumni': '동문 60인',
+                'hero-title': '개원 60주년', 'hero-sub1': '1966년 설립된 역사', 'hero-sub2': '경희대학교 경영대학원, 지혜를 미래로 투영하다',
+                'history-1-title': '경희대학교 경영대학원 설립', 'history-1-desc': '대한민국 경영 교육의 새로운 이정표를 세우며 첫 항해를 시작했습니다.',
+                'history-2-title': '글로벌 비즈니스 리더십 강화', 'history-2-desc': '글로벌 교육 과정 도입 및 해외 명문 대학과의 교류를 활성화했습니다.',
+                'history-3-title': '미래 100년을 향한 비전 선포', 'history-3-desc': '전통을 계승하고 디지털 대전환 시대를 선도하는 지능형 경영 플랫폼을 완성합니다.',
+                'filter-all': '전체', 'filter-card': '카드뉴스', 'filter-video': '영상/숏폼', 'filter-interview': '인터뷰',
+                'archive-1': '60주년 기념 영상 (Shorts)', 'archive-2': '경희 경영 발자취 카드뉴스', 'archive-3': '자랑스러운 동문 인터뷰 01', 'archive-4': '글로벌 네트워크 현황',
+                'event-main-title': '오프라인 행사 안내', 'event-sub-title': '60주년 기념 다채로운 행사', 'event-btn': '참가신청 / 자세히 보기',
+                'event-1-name': '60주년 기념 비전 선포식', 'event-1-date': '2026. 05. 20 (수) 14:00', 'event-1-loc': '경희대학교 평화의 전당',
+                'event-2-name': '글로벌 리더 포럼', 'event-2-date': '2026. 06. 10 (수) 10:00', 'event-2-loc': '오비스홀 대강당',
+                'guest-title': '디지털 방명록', 'guest-sub': '축하 메시지를 남겨주세요', 'guest-btn': '등록하기'
+            },
+            'EN': {
+                'menu-intro': 'Intro', 'menu-history': 'History', 'menu-archive': 'Archive', 'menu-alumni': 'Alumni',
+                'hero-title': '60th Anniversary', 'hero-sub1': 'Est. 1966 Legacy', 'hero-sub2': 'Reflecting the Future through the Intelligence of GSB',
+                'history-1-title': 'Foundation of KHU GSB', 'history-1-desc': 'Established a new milestone in Korean business education.',
+                'history-2-title': 'Strengthening Global Leadership', 'history-2-desc': 'Introduced global curriculum and activated exchanges with prestigious universities.',
+                'history-3-title': 'Vision Proclamation for Future', 'history-3-desc': 'Leading the digital transformation era with an intelligent management platform.',
+                'filter-all': 'All', 'filter-card': 'Card News', 'filter-video': 'Video', 'filter-interview': 'Interview',
+                'archive-1': '60th Anniversary Shorts', 'archive-2': 'History Highlights Card News', 'archive-3': 'Alumni Interview Vol.01', 'archive-4': 'Global Network Status',
+                'event-main-title': 'Upcoming Offline Events', 'event-sub-title': '60th Celebration Programs', 'event-btn': 'RSVP / More Info',
+                'event-1-name': '60th Vision Ceremony', 'event-1-date': '2026. 05. 20 (Wed) 14:00', 'event-1-loc': 'Grand Peace Palace, KHU',
+                'event-2-name': 'Global Leaders Forum', 'event-2-date': '2026. 06. 10 (Wed) 10:00', 'event-2-loc': 'Orbis Hall Grand Auditorium',
+                'guest-title': 'Digital Guestbook', 'guest-sub': 'Leave a message', 'guest-btn': 'Post Message'
+            },
+            'CN': {
+                'menu-intro': '简介', 'menu-history': '历史', 'menu-archive': '档案馆', 'menu-alumni': '校友',
+                'hero-title': '开院 60周年', 'hero-sub1': '自1966年以来的传统', 'hero-sub2': '庆熙大学商学院, 将智慧投射向未来',
+                'history-1-title': '庆熙大学商学院成立', 'history-1-desc': '在韩国经营教育中树立了新的里程碑。',
+                'history-2-title': '加强全球领导力', 'history-2-desc': '引入全球课程并加强与海外名牌大学的交流。',
+                'history-3-title': '宣布面向未来的愿景', 'history-3-desc': '继承传统, 引领数字化转型时代的智能经营平台。',
+                'filter-all': '全部', 'filter-card': '图片新闻', 'filter-video': '视频', 'filter-interview': '采访',
+                'archive-1': '60周年纪念视频', 'archive-2': '商学院历史精选图片', 'archive-3': '杰出校友采访 01', 'archive-4': '全球网络现状',
+                'event-main-title': '线下活动预告', 'event-sub-title': '60周年系列庆祝活动', 'event-btn': '参加申请 / 详情',
+                'event-1-name': '60周年愿景发布会', 'event-1-date': '2026. 05. 20 14:00', 'event-1-loc': '庆熙大学 平和之殿堂',
+                'event-2-name': '全球领袖论坛', 'event-2-date': '2026. 06. 10 10:00', 'event-2-loc': 'Orbis Hall大讲堂',
+                'guest-title': '电子留言板', 'guest-sub': '请留下祝贺词', 'guest-btn': '发表留言'
+            },
+            'JP': {
+                'menu-intro': 'イントロ', 'menu-history': '沿革', 'menu-archive': 'アーカイブ', 'menu-alumni': '同門60人',
+                'hero-title': '開院 60周年', 'hero-sub1': '1966年設立の歴史', 'hero-sub2': '慶熙大学経営大学院、知恵を未来へと投影する',
+                'history-1-title': '経営大学院の設立', 'history-1-desc': '韓国の経営教育における新たなマイルストーンを築きました。',
+                'history-2-title': 'グローバルリーダーシップの強化', 'history-2-desc': 'グローバルカリキュラムの導入と海外名門大学との交流を活性化しました。',
+                'history-3-title': '未来100年に向けたビジョンの宣言', 'history-3-desc': '伝統を継承し、デジタルトランスフォーメーション時代を先導します。',
+                'filter-all': 'すべて', 'filter-card': 'カードニュース', 'filter-video': '動画', 'filter-interview': 'インタビュー',
+                'archive-1': '60周年記念動画', 'archive-2': '経営大学院の歩みカードニュース', 'archive-3': '誇りある同門インタビュー', 'archive-4': 'グローバルネットワーク現状',
+                'event-main-title': 'オフライン行事案内', 'event-sub-title': '60周年記念の多彩なプログラム', 'event-btn': '参加申請 / 詳細',
+                'event-1-name': '60周年ビジョン宣言式', 'event-1-date': '2026. 05. 20 14:00', 'event-1-loc': '慶熙大学 平和の殿堂',
+                'event-2-name': 'グローバルリーダーフォーラム', 'event-2-date': '2026. 06. 10 10:00', 'event-2-loc': 'オービスホール大講堂',
+                'guest-title': '電子芳名録', 'guest-sub': 'お祝いのメッセージを', 'guest-btn': '登録する'
+            }
+        };
+
+        function changeLang(lang) {
+            // Update active btn style
+            document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`btn-${lang.toLowerCase()}`).classList.add('active');
+
+            // Replace texts
+            const keys = document.querySelectorAll('.lang-key');
+            keys.forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (langData[lang][key]) {
+                    el.textContent = langData[lang][key];
+                }
+            });
+        }
+
+        // [2] Preloader Force Entry Logic
+        const preloader = document.getElementById('preloader');
+        const loaderBar = document.getElementById('loader-bar');
+        let isLoaded = false;
+        function finishLoading() {
+            if (isLoaded) return;
+            isLoaded = true;
+            loaderBar.style.width = '100%';
+            setTimeout(() => {
+                preloader.style.opacity = '0';
+                setTimeout(() => { preloader.style.display = 'none'; }, 600);
+            }, 300);
+        }
+        let prog = 0;
+        const barTimer = setInterval(() => {
+            prog += Math.random() * 20;
+            if(prog > 95) { prog = 95; clearInterval(barTimer); }
+            loaderBar.style.width = prog + '%';
+        }, 150);
+        const forceTimer = setTimeout(finishLoading, 2500);
+        window.addEventListener('load', () => { clearTimeout(forceTimer); finishLoading(); });
+
+        // [3] Archive Filter Logic
+        function filterArchive(category) {
+            const items = document.querySelectorAll('.archive-item');
+            const tabs = document.querySelectorAll('.filter-tab');
+            
+            tabs.forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+
+            items.forEach(item => {
+                if (category === 'all' || item.classList.contains(category)) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        }
+
+        // [4] Alumni Grid Generation
+        const alumniGrid = document.getElementById('alumni-grid');
+        for (let i = 1; i <= 60; i++) {
+            alumniGrid.insertAdjacentHTML('beforeend', `
+                <div class="relative aspect-square overflow-hidden group cursor-pointer bg-neutral-900 border border-white/5" 
+                     onclick="openVideo('dQw4w9WgXcQ')" data-aos="fade-up" data-aos-delay="${(i % 5) * 30}">
+                    <img src="https://i.pravatar.cc/300?u=gsb${i}" class="w-full h-full object-cover grayscale opacity-50 transition-transform duration-700 group-hover:grayscale-0 group-hover:scale-110 group-hover:opacity-100">
+                    <div class="absolute inset-0 bg-[#8A1538]/90 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-center items-center p-1 text-center">
+                        <span class="font-bold text-[8px] md:text-xs text-white leading-tight">동문 ${i}</span>
+                        <span class="text-[6px] md:text-[8px] text-gold mt-1 uppercase tracking-tighter italic font-semibold">${i+80}th Class</span>
+                    </div>
+                </div>
+            `);
+        }
+
+        // [5] Video Modal Logic
+        const modal = document.getElementById('videoModal');
+        const player = document.getElementById('videoPlayer');
+        function openVideo(id) {
+            player.src = `https://www.youtube.com/embed/${id}?autoplay=1&modestbranding=1&rel=0`;
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeVideo() {
+            player.src = '';
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // [6] Guestbook logic with 10 Sample Data
+        const sampleGuestData = [
+            { name: "김경희 (88학번)", msg: "60주년을 진심으로 축하드립니다. 경희 경영인으로서 자부심을 느낍니다!" },
+            { name: "Lee Joon (02 Class)", msg: "Proud to be part of the KHU GSB family. Happy 60th!" },
+            { name: "박미정 (95학번)", msg: "60년의 전통, 100년의 미래를 응원합니다." },
+            { name: "최준호 (12학번)", msg: "사회에서 경희의 이름을 빛내는 자랑스러운 후배가 되겠습니다." },
+            { name: "한가인 (04학번)", msg: "지혜의 투영, 미래를 향한 도약을 응원합니다." },
+            { name: "윤아름 (18학번)", msg: "60주년 축하드려요! 우리 학교 최고!" },
+            { name: "강동원 (81학번)", msg: "벌써 60년이라니 감회가 새롭습니다. 모든 동문님들 건승하세요!" },
+            { name: "Chen Wei (15th)", msg: "祝贺庆熙大学商学院成立60周年! 前程似锦!" },
+            { name: "Sato Yuki (09th)", msg: "慶熙大学経営大学院60周年おめでとうございます！" },
+            { name: "오세훈 (90학번)", msg: "역사와 전통의 경희대 경영대학원, 무궁한 발전을 빕니다." }
+        ];
+
+        function renderGuestbook() {
+            const list = document.getElementById('guestbook-list');
+            list.innerHTML = '';
+            sampleGuestData.forEach(item => {
+                const entry = `<div class="bg-zinc-900/30 p-6 rounded-xl border-l-4 border-gold">
+                                <p class="text-white/80 text-sm italic mb-2">"${item.msg}"</p>
+                                <span class="text-gold text-[10px] font-bold uppercase tracking-widest">— ${item.name}</span>
+                               </div>`;
+                list.insertAdjacentHTML('beforeend', entry);
+            });
+        }
+
+        function addGuestEntry() {
+            const name = document.getElementById('gb-name').value;
+            const msg = document.getElementById('gb-msg').value;
+            if(!name || !msg) return alert("Please fill out the form.");
+            sampleGuestData.unshift({ name, msg });
+            renderGuestbook();
+            document.getElementById('gb-name').value = '';
+            document.getElementById('gb-msg').value = '';
+        }
+
+        // Init Guestbook
+        renderGuestbook();
+
+        window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeVideo(); });
+    </script>
+</body>
+</html>
